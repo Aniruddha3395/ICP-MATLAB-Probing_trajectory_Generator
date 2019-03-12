@@ -2,8 +2,8 @@ function [ptcloud,ptcloud_normals] = generate_pointcloud_mex_enabled(v,f,n,gap_x
 
 % code to generate uniformly sampled data points on STL
 
-ptcloud = zeros(1e9,3);
-ptcloud_normals = zeros(1e9,3);
+ptcloud = zeros(1e8,3);
+ptcloud_normals = zeros(1e8,3);
 idx_start = 1;
 for idx = 1:size(f,1)
     
@@ -40,8 +40,13 @@ for idx = 1:size(f,1)
     pts3 = Apply_Transformation_mex(pts2,inv(T));
     pts3 = pts3 +  tri(1,:);
     pts3_size = size(pts3,1);
-    ptcloud(idx_start:pts3_size+idx_start-1,:) = pts3;
-    ptcloud_normals(idx_start:pts3_size+idx_start-1,:) = ptcloud_normals(idx_start:pts3_size+idx_start-1,:) + nn;
+    ptcloud_idx = idx_start:pts3_size+idx_start-1;
+    if pts3_size+idx_start-1 <= size(ptcloud,1)
+        ptcloud(ptcloud_idx,:) = pts3;
+        ptcloud_normals(ptcloud_idx,:) = ptcloud_normals(idx_start:pts3_size+idx_start-1,:) + nn;
+    else
+        disp('ERROR : Pointcloud size limit exceeded!');
+    end
     idx_start = pts3_size+idx_start;
     
 end

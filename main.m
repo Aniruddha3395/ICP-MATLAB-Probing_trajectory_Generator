@@ -69,7 +69,6 @@ fig1 = figure();
 set(fig1,'units','normalized','outerpos',[0 0 1 1]);
 axis equal;
 addToolbarExplorationButtons(fig1);
-% pause(0.1);
 show_origin();
 view_stl_with_VF(v,f,[],[],[],[]);
 

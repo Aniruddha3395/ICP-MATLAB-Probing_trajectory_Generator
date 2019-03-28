@@ -69,6 +69,7 @@ fig1 = figure();
 set(fig1,'units','normalized','outerpos',[0 0 1 1]);
 axis equal;
 addToolbarExplorationButtons(fig1);
+% pause(0.1);
 show_origin();
 view_stl_with_VF(v,f,[],[],[],[]);
 
@@ -113,6 +114,7 @@ top_face_idx = top_face_idx(1:idx_face_counter-1,:);
 
 part_pts =[];
 traj_set = {};
+traj_xyzcba = {};
 joint_angle_set = {};
 traj_grp_idx = [];
 traj_idx_counter = 1;
@@ -150,6 +152,8 @@ while 1
         if traj_flag
             traj_points(:,1:3) = traj_points(:,1:3).*1000; %making values in mm
             traj_set{end+1,1} = traj_points;
+            cba = bxbybz_to_euler_mex(traj_points(:,4:6),traj_points(:,7:9),traj_points(:,10:12));
+            traj_xyzcba{end+1} = [traj_points(:,1:3),cba];
             joint_angle_set{end+1,1} = joint_angles;
             traj_start_idx = traj_idx_counter;
             traj_end_idx = traj_idx_counter + size(traj_points,1)-1;
@@ -171,6 +175,7 @@ end
 %% write data to file
 
 dlmwrite('data_files/probing_xyz_bxbybz.csv',cell2mat(traj_set)); % in mm
+dlmwrite('data_files/probing_xyz_cba.csv',cell2mat(traj_xyzcba)); % in mm
 dlmwrite('data_files/probing_joint_angles.csv',cell2mat(joint_angle_set));
 dlmwrite('data_files/probing_group_idx.csv',traj_grp_idx);
 

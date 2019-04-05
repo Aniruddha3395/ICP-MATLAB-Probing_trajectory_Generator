@@ -1,0 +1,10 @@
+case1
+
+max_d :1.728676,
+ max_plane_d :0.585145,
+ mean_d :0.904732,
+ mean_plane_d :0.270319,
+ weighted_max_mean_d :1.110718
+
+
+ 

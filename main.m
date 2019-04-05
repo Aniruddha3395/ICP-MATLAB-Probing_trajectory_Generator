@@ -13,13 +13,13 @@ global check_for_asymmetry;
 gen_ptcloud = true;
 use_cpp_IK_solver = false;
 check_for_asymmetry = false;
-robot1.rob_type = 'iiwa7';
-traj_len = 40;
-gap = 0.5;
+robot1.rob_type = 'iiwa14';
+traj_len = 80;
+gap = 5;
 
 % probing tool TCP
 robot1.robot_ree_T_tee = eye(4);
-robot1.robot_ree_T_tee(1:3,4) = [0; 0; 0.0968];
+robot1.robot_ree_T_tee(1:3,4) = [0; 0; 0.1049];
 
 %% generate robot_T_part transformation
 
@@ -87,11 +87,11 @@ close_win.Callback = @CloseFigWindow;
 
 % transform imported trajectory from file Button
 symm_chk_bx = uicontrol(fig1,'Style','checkbox');
-symm_chk_bx.Position = [50 960 250 40];
+symm_chk_bx.Position = [1200 50 300 40];
 symm_chk_bx.String = 'Check Part Symmetry';
 symm_chk_bx.FontWeight = 'bold';
 symm_chk_bx.ForegroundColor = [0.1,0,0.3];
-symm_chk_bx.FontSize = 12;
+symm_chk_bx.FontSize = 15;
 symm_chk_bx.Callback = @(src,event)ChkPartSym(src,event);
 
 
@@ -153,7 +153,7 @@ while 1
             traj_points(:,1:3) = traj_points(:,1:3).*1000; %making values in mm
             traj_set{end+1,1} = traj_points;
             cba = bxbybz_to_euler_mex(traj_points(:,4:6),traj_points(:,7:9),traj_points(:,10:12));
-            traj_xyzcba{end+1} = [traj_points(:,1:3),cba];
+            traj_xyzcba{end+1,1} = [traj_points(:,1:3),cba];
             joint_angle_set{end+1,1} = joint_angles;
             traj_start_idx = traj_idx_counter;
             traj_end_idx = traj_idx_counter + size(traj_points,1)-1;
@@ -174,8 +174,12 @@ end
 
 %% write data to file
 
-dlmwrite('data_files/probing_xyz_bxbybz.csv',cell2mat(traj_set)); % in mm
-dlmwrite('data_files/probing_xyz_cba.csv',cell2mat(traj_xyzcba)); % in mm
-dlmwrite('data_files/probing_joint_angles.csv',cell2mat(joint_angle_set));
-dlmwrite('data_files/probing_group_idx.csv',traj_grp_idx);
+% dlmwrite('data_files/probing_xyz_bxbybz.csv',cell2mat(traj_set)); % in mm
+% dlmwrite('data_files/probing_xyz_cba.csv',cell2mat(traj_xyzcba)); % in mm
+% dlmwrite('data_files/probing_joint_angles.csv',cell2mat(joint_angle_set));
+% dlmwrite('data_files/probing_group_idx.csv',traj_grp_idx);
 
+dlmwrite('/home/cl/Documents/KUKA_Shared/probing_xyz_bxbybz.csv',cell2mat(traj_set)); % in mm
+dlmwrite('/home/cl/Documents/KUKA_Shared/probing_xyz_cba.csv',cell2mat(traj_xyzcba)); % in mm
+dlmwrite('/home/cl/Documents/KUKA_Shared/probing_joint_angles.csv',cell2mat(joint_angle_set));
+dlmwrite('/home/cl/Documents/KUKA_Shared/probing_group_idx.csv',traj_grp_idx);

@@ -100,7 +100,7 @@ close_win.Callback = @CloseFigWindow;
 
 % execute robot motion
 robot1.rob_motion = uicontrol(fig1,'Style','pushbutton');
-robot1.rob_motion.Position = [1650 140 150 50];
+robot1.rob_motion.Position = [1650 200 150 50];
 robot1.rob_motion.String = 'execute';
 robot1.rob_motion.FontWeight = 'bold';
 robot1.rob_motion.BackgroundColor = [0.8,0.9,1];
@@ -120,7 +120,7 @@ param.save_file.Callback = @SaveData;
 
 % perform contact based registration
 robot1.perform_reg = uicontrol(fig1,'Style','pushbutton');
-robot1.perform_reg.Position = [1650 200 150 50];
+robot1.perform_reg.Position = [1650 140 150 50];
 robot1.perform_reg.String = 'perform reg';
 robot1.perform_reg.FontWeight = 'bold';
 robot1.perform_reg.BackgroundColor = [0.8,0.9,1];

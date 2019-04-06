@@ -24,7 +24,7 @@ classdef ClientComm
         end
         
         function data = receive_data(comm)
-            fprintf('Receiveing data from the server at %s\n',comm.ip_address);
+            fprintf('Receiving data from the server at %s\n',comm.ip_address);
             data = fscanf(comm.tcp,'%s');
         end
         

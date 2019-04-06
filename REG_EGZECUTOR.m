@@ -14,6 +14,23 @@ global traj_xyzcba;
 global joint_angle_set;
 global traj_grp_idx;
 global port;
+global type;
+global dcm_obj;
+global part_pts;
+global traj_idx_counter;
+global kdtree;
+global model_ptcloud;
+global model_bounds;
+global centroid;
+global traj_len;
+global gap;
+global top_face_idx;
+global v f n;
+global traj_type1;
+global traj_type2;
+global rob_motion;
+global save_file;
+global perform_reg;
 
 gen_ptcloud = true;
 use_cpp_IK_solver = false;
@@ -22,6 +39,7 @@ robot1.rob_type = 'iiwa14';
 traj_len = 80;
 gap = 5;
 port = 30005; 
+type = 1;
 
 % probing tool TCP
 robot1.robot_ree_T_tee = eye(4);
@@ -111,26 +129,45 @@ rob_motion.ForegroundColor = [0.1,0,0.3];
 rob_motion.FontSize = 12;
 rob_motion.Callback = @ExecuteMotion;
 
-% execute robot motion
-rob_motion = uicontrol(fig1,'Style','pushbutton');
-rob_motion.Position = [1650 200 150 50];
-rob_motion.String = 'Save data';
-rob_motion.FontWeight = 'bold';
-rob_motion.BackgroundColor = [0.8,0.9,1];
-rob_motion.ForegroundColor = [0.1,0,0.3];
-rob_motion.FontSize = 12;
-rob_motion.Callback = @SaveData;
+% save data to files
+save_file = uicontrol(fig1,'Style','pushbutton');
+save_file.Position = [1650 260 150 50];
+save_file.String = 'Save data';
+save_file.FontWeight = 'bold';
+save_file.BackgroundColor = [0.8,0.9,1];
+save_file.ForegroundColor = [0.1,0,0.3];
+save_file.FontSize = 12;
+save_file.Callback = @SaveData;
 
 % perform contact based registration
-rob_motion = uicontrol(fig1,'Style','pushbutton');
-rob_motion.Position = [1650 260 150 50];
-rob_motion.String = 'perform reg';
-rob_motion.FontWeight = 'bold';
-rob_motion.BackgroundColor = [0.8,0.9,1];
-rob_motion.ForegroundColor = [0.1,0,0.3];
-rob_motion.FontSize = 12;
-rob_motion.Callback = @PerformReg;
+perform_reg = uicontrol(fig1,'Style','pushbutton');
+perform_reg.Position = [1650 200 150 50];
+perform_reg.String = 'perform reg';
+perform_reg.FontWeight = 'bold';
+perform_reg.BackgroundColor = [0.8,0.9,1];
+perform_reg.ForegroundColor = [0.1,0,0.3];
+perform_reg.FontSize = 12;
+perform_reg.Callback = @PerformReg;
 
+% traj type 1 selection
+traj_type1 = uicontrol(fig1,'Style','pushbutton');
+traj_type1.Position = [1650 900 200 50];
+traj_type1.String = '1-point method';
+traj_type1.FontWeight = 'bold';
+traj_type1.BackgroundColor = [0.8,0.9,1];
+traj_type1.ForegroundColor = [0.1,0,0.3];
+traj_type1.FontSize = 12;
+traj_type1.Callback = @SelectTrajType1;
+
+% traj type 2 selection
+traj_type2 = uicontrol(fig1,'Style','pushbutton');
+traj_type2.Position = [1650 840 200 50];
+traj_type2.String = '2-point method';
+traj_type2.FontWeight = 'bold';
+traj_type2.BackgroundColor = [0.8,0.9,1];
+traj_type2.ForegroundColor = [0.1,0,0.3];
+traj_type2.FontSize = 12;
+traj_type2.Callback = @SelectTrajType2;
 
 model_bounds = [min(model_ptcloud(:,1)),max(model_ptcloud(:,1));
     min(model_ptcloud(:,2)),max(model_ptcloud(:,2));
@@ -139,6 +176,7 @@ centroid = mean(model_ptcloud);
 % scatter3d(centroid,'filled')
 
 %% Filtering the faces which lie on surface only
+
 top_face_idx = zeros(size(n,1),1);
 idx_face_counter = 1;
 for i=1:size(f)
@@ -155,65 +193,5 @@ traj_xyzcba = {};
 joint_angle_set = {};
 traj_grp_idx = [];
 traj_idx_counter = 1;
-
-while 1
-    key=0;
-    fprintf('Select Point on Model Pointcloud')
-    while key==0
-        try
-            key = waitforbuttonpress;
-        catch
-            flag=1;
-            break;
-        end
-    end
-    if flag==1
-        fprintf('\nSelection Complete\n');
-        break;
-    end
-    c_info = getCursorInfo(dcm_obj);
-    part_pt = c_info.Position;
-    part_pts = [part_pts;part_pt];
-    
-    %Plot the Points
-    if ~isempty(part_pts)
-        hold on;
-        pt_scatter = scatter3(part_pts(:,1),part_pts(:,2),part_pts(:,3),50,'k','filled'); %Plot the Points
-        uistack(pt_scatter,'top');
-    end
-    
-    if ~isempty(part_pt)
-        [traj_points,joint_angles,traj_flag] = generate_probe_traj(kdtree,model_ptcloud,model_bounds,...
-            part_pt,centroid,traj_len,gap,top_face_idx,v,f,n,check_for_asymmetry);
-        
-        if traj_flag
-            traj_points(:,1:3) = traj_points(:,1:3).*1000; %making values in mm
-            traj_set{end+1,1} = traj_points;
-            cba = bxbybz_to_euler_mex(traj_points(:,4:6),traj_points(:,7:9),traj_points(:,10:12));
-            traj_xyzcba{end+1,1} = [traj_points(:,1:3),cba];
-            joint_angle_set{end+1,1} = joint_angles;
-            traj_start_idx = traj_idx_counter;
-            traj_end_idx = traj_idx_counter + size(traj_points,1)-1;
-            traj_grp_idx = [traj_grp_idx;traj_start_idx,traj_end_idx];
-            traj_idx_counter = traj_idx_counter + size(traj_points,1);
-            
-            hold on;
-            plot3(traj_points(:,1),traj_points(:,2),traj_points(:,3),'g','LineWidth',5);
-        else
-            
-            hold on;
-            traj_points(:,1:3) = traj_points(:,1:3).*1000;
-            plot3(traj_points(:,1),traj_points(:,2),traj_points(:,3),'r','LineWidth',5);
-            
-        end
-    end
-end
-
-%% write data to file
-
-% dlmwrite('data_files/probing_xyz_bxbybz.csv',cell2mat(traj_set)); % in mm
-% dlmwrite('data_files/probing_xyz_cba.csv',cell2mat(traj_xyzcba)); % in mm
-% dlmwrite('data_files/probing_joint_angles.csv',cell2mat(joint_angle_set));
-% dlmwrite('data_files/probing_group_idx.csv',traj_grp_idx);
 
 

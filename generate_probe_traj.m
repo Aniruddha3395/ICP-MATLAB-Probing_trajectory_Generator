@@ -1,6 +1,14 @@
 function [xyz_bxbybz,joint_angles,flag] = generate_probe_traj(kdtree,model_ptcloud,model_bounds,part_pt,centroid,traj_len,gap,top_face_idx,v,f,n,check_for_asymmetry)
 
-points = gen_2d_traj(part_pt(:,1:2),centroid(:,1:2),traj_len,gap);
+global traj_data;
+
+if traj_data.traj_mode==1
+    points = gen_2d_traj(part_pt(:,1:2),centroid(:,1:2),traj_len,gap);
+elseif traj_data.traj_mode==2
+    traj_len = norm(part_pt(1,1:2)-part_pt(2,1:2));
+    points = gen_2d_traj(part_pt(1,1:2),part_pt(2,1:2),traj_len,gap);
+end
+
 [projected_points,normals] = project_2d_traj(points,top_face_idx,v,f,n);
 
 % testing projected_points for part assymetry

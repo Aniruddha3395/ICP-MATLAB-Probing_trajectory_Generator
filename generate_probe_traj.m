@@ -24,7 +24,7 @@ if asymm_flag
     xyz_bxbybz = [projected_points,bx,by,bz];
     xyz_bxbybz(:,1:3) = xyz_bxbybz(:,1:3)./1000;
     [joint_angles,flag] = compute_IK_1(xyz_bxbybz); % composite style
-    % [joint_angles,flag] = compute_IK_2(xyz_bxbybz); % finishing style
+%     [joint_angles,flag] = compute_IK_2(xyz_bxbybz); % finishing style
 else
     disp('Axis/Plane symmetry exist in the part...this trajectory wont be useful...');
     xyz_bxbybz = projected_points./1000;

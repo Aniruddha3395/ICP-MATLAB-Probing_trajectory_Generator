@@ -17,8 +17,9 @@ param.check_for_asymmetry = false;
 robot1.rob_type = 'iiwa14';
 traj_data.traj_len = 80;
 traj_data.gap = 5;
-param.port = 30005; 
+param.port = 30007; 
 param.type = 1;
+traj_data.constraint_j4 = true;
 
 % probing tool TCP
 robot1.robot_ree_T_tee = eye(4);
@@ -28,7 +29,15 @@ robot1.robot_ree_T_tee(1:3,4) = [0; 0; 0.1049];
 
 % for now, just generating transformation,
 % later on, will make this service and get that transfrmation as request
-robot1.rob_T_part = gen_rob_T_part();
+
+% composite mold
+% robot1.rob_T_part = gen_rob_T_part();
+
+% for Heli Blade
+robot1.rob_T_part = eye(4);
+robot1.rob_T_part(1,4) = 381;
+robot1.rob_T_part(2,4) = 736;
+robot1.rob_T_part(1:3,1:3) = rotz(180);
 
 %% adding woking directory and all dependancies
 [working_dir,~,~] = fileparts(mfilename('fullpath'));
@@ -38,8 +47,8 @@ addpath(genpath(working_dir),'-end');
 
 % part_name = 'test2';
 % part_name = 'Dome';
-% part_name = 'Heli_Blade';
-part_name = 'Composite_Mold';
+part_name = 'Heli_Blade';
+% part_name = 'Composite_Mold';
 
 
 % Load STL

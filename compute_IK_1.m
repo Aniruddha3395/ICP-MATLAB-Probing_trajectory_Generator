@@ -1,7 +1,8 @@
 function [joint_angles,traj_successful] = compute_IK_1(xyz_bxbybz)
 
 global robot1;
-global use_cpp_IK_solver;
+global param;
+global traj_data;
 
 tolerances(1) = 0.003;
 tolerances(2) = 0.0524;
@@ -37,12 +38,15 @@ joint_config = [-0.1321;0.1415;0.0895;-1.5916;-0.0033;1.4041;-0.0312];  %start j
 for new_seed_strt = 1:compute_traj_attempt_lim
     theta_lb = theta_th';
     theta_ub = -theta_th';
+    if traj_data.constraint_j4 
+        theta_ub(4) = 10*pi/180;
+    end
     reach = 0;
     joint_angles = [];
     failed_idx = [];
     for  target_idx= 1:size(xyz_bxbybz,1)
         %compute IK for each point
-        if ~use_cpp_IK_solver
+        if ~param.use_cpp_IK_solver
             [joint_config,status] = ascent_IK( joint_config,xyz_bxbybz(target_idx,:),...
                 tolerances,options, theta_lb, theta_ub );
         else

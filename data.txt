@@ -1,0 +1,83 @@
+case1
+
+max_d :2.931828,
+ max_plane_d :0.666305,
+ mean_d :0.966335,
+ mean_plane_d :0.142293,
+ weighted_max_mean_d :1.457708
+
+case 2
+
+max_d :2.797704,
+ max_plane_d :1.281267,
+ mean_d :1.085855,
+ mean_plane_d :0.408952,
+ weighted_max_mean_d :1.513817
+
+ case 3
+
+ max_d :2.606391,
+ max_plane_d :0.738772,
+ mean_d :1.036832,
+ mean_plane_d :0.288719,
+ weighted_max_mean_d :1.429222
+
+ case 4
+
+ max_d :2.700500,
+ max_plane_d :0.647338,
+ mean_d :1.008769,
+ mean_plane_d :0.187458,
+ weighted_max_mean_d :1.431702
+
+ case 5
+
+ max_d :2.890659,
+ max_plane_d :0.720214,
+ mean_d :0.985924,
+ mean_plane_d :0.137308,
+ weighted_max_mean_d :1.462108
+
+ case 6
+
+ max_d :2.574551,
+ max_plane_d :0.754387,
+ mean_d :1.010577,
+ mean_plane_d :0.204508,
+ weighted_max_mean_d :1.401571
+
+case 7
+
+max_d :2.443612,
+ max_plane_d :0.610981,
+ mean_d :0.923572,
+ mean_plane_d :0.188096,
+ weighted_max_mean_d :1.303582
+
+case 8
+
+max_d :2.564242,
+ max_plane_d :0.402150,
+ mean_d :0.921863,
+ mean_plane_d :0.098625,
+ weighted_max_mean_d :1.332457
+
+ case 9
+
+ max_d :2.214092,
+ max_plane_d :0.471419,
+ mean_d :0.872857,
+ mean_plane_d :0.169928,
+ weighted_max_mean_d :1.208166
+
+ case 10
+
+ max_d :2.636892,
+ max_plane_d :0.708351,
+ mean_d :0.949176,
+ mean_plane_d :0.222436,
+ weighted_max_mean_d :1.371105
+
+
+ case 11
+ 

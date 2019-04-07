@@ -52,9 +52,11 @@ end
         position_err = 0; ori_x_err = 0; ori_y_err = 0; ori_z_err = 0;
         
         if strcmp(robot1.rob_type,'iiwa7')
-            b1_T_ree = get_iiwa7_FK_mex(x', eye(4));
+            b1_T_ree = get_iiwa7_FK_all_joints_mex(x', eye(4));
+            b1_T_ree = b1_T_ree(33:36,:);
         elseif strcmp(robot1.rob_type,'iiwa14')
-            b1_T_ree = get_iiwa14_FK_mex(x', eye(4));
+            b1_T_ree = get_iiwa14_FK_all_joints_mex(x', eye(4));
+            b1_T_ree = b1_T_ree(33:36,:);
         end
         
         b1_T_tee = b1_T_ree * robot1_ree_T_tee;

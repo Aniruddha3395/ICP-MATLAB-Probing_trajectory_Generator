@@ -20,6 +20,7 @@ traj_data.gap = 5;
 param.port = 30007; 
 param.type = 1;
 traj_data.constraint_j4 = true;
+robot1.Robot_Comm_Enabled = false;
 
 % probing tool TCP
 robot1.robot_ree_T_tee = eye(4);
@@ -31,13 +32,7 @@ robot1.robot_ree_T_tee(1:3,4) = [0; 0; 0.1049];
 % later on, will make this service and get that transfrmation as request
 
 % composite mold
-% robot1.rob_T_part = gen_rob_T_part();
-
-% for Heli Blade
-robot1.rob_T_part = eye(4);
-robot1.rob_T_part(1,4) = 381;
-robot1.rob_T_part(2,4) = 736;
-robot1.rob_T_part(1:3,1:3) = rotz(180);
+robot1.rob_T_part = gen_rob_T_part();
 
 %% adding woking directory and all dependancies
 [working_dir,~,~] = fileparts(mfilename('fullpath'));
@@ -47,8 +42,8 @@ addpath(genpath(working_dir),'-end');
 
 % part_name = 'test2';
 % part_name = 'Dome';
-part_name = 'Heli_Blade';
-% part_name = 'Composite_Mold';
+% part_name = 'Heli_Blade';
+part_name = 'Composite_Mold';
 
 
 % Load STL
@@ -116,6 +111,9 @@ robot1.rob_motion.BackgroundColor = [0.8,0.9,1];
 robot1.rob_motion.ForegroundColor = [0.1,0,0.3];
 robot1.rob_motion.FontSize = 12;
 robot1.rob_motion.Callback = @ExecuteMotion;
+if ~robot1.Robot_Comm_Enabled
+    robot1.rob_motion.Enable = 'off';
+end
 
 % save data to files
 param.save_file = uicontrol(fig1,'Style','pushbutton');
@@ -136,6 +134,9 @@ robot1.perform_reg.BackgroundColor = [0.8,0.9,1];
 robot1.perform_reg.ForegroundColor = [0.1,0,0.3];
 robot1.perform_reg.FontSize = 12;
 robot1.perform_reg.Callback = @PerformReg;
+if ~robot1.Robot_Comm_Enabled
+    robot1.perform_reg.Enable = 'off';
+end
 
 % traj type 1 selection
 traj_data.traj_type1 = uicontrol(fig1,'Style','pushbutton');

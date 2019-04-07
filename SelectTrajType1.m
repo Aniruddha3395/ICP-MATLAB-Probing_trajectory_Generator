@@ -71,9 +71,15 @@ while 1
 end
 
 traj_data.traj_type2.Enable = 'on';
-robot1.rob_motion.Enable = 'on';
 param.save_file.Enable = 'on';
-robot1.perform_reg.Enable = 'on';
+
+if robot1.Robot_Comm_Enabled
+    robot1.rob_motion.Enable = 'on';
+    robot1.perform_reg.Enable = 'on';
+else
+    robot1.rob_motion.Enable = 'off';
+    robot1.perform_reg.Enable = 'off';
+end
 
 datacursormode off;
 
